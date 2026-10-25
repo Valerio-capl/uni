@@ -59,6 +59,12 @@ int main(void){
     /*  per accedere con la memoria a un valore matrix[i][j] (al suo indirizzo)
     si calcola (i*n + j) + sizeof(type)  con n dimensione del matrix delle colonne. */
 
-    
+    /*
+    nota:
+        si puo usare (sizeof(arr)/sizeof(arr[0])) per calcolare la lunghezza
+        di un array. questo calcolo puo essere fatto solo sull'array non sul puntatore
+        quindi bisogna prestare attenzione al passaggio per valore o per indirizzo.
+    */
+
     return 0;
 }

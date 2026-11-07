@@ -113,6 +113,16 @@ int length(Node* head) {
     return count;
 }
 
+// func freelist elimina l'intera lista.
+// usa quando in un ciclo si crea un nodo con malloc ma è NULL
+void freeList(Node *head) {
+    while (head != NULL) {
+        Node *temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
 int main(void){
     Node *head = NULL;
     return 0;

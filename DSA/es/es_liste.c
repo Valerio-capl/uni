@@ -2,10 +2,21 @@
 #include <stdbool.h>
 
 typedef struct Node {
-	int data;
+    int data;
 	struct Node *next;
 } Node;
 
+
+Node *createNode(int data){
+    Node *nodo = (Node *) malloc(sizeof(Node));
+    if (!nodo) {
+        printf("Errore di allocazione memoria.\n");
+        exit(1);
+    }
+    nodo->data = data;
+    nodo->next = NULL;
+    return nodo;
+}
 
 // inverti lista single-link.       1->2->3->4->5->null  null<-1<-2<-3<-4<-5
 // idea prendi un prev = none e salvi il next del nodo, il next dell curr diventa il prev e aggiorni prev e next
@@ -71,6 +82,8 @@ bool is_seen(int val, int *arr, int n){
 // il primo prende un nodo e il secondo controlla se ci sono altri nodi con lo stesso valore. 
 // ora O(n^2) caso peggiore e O(n) caso medio ma O(n) spazio con cicli tempi uguali ma O(1) spazio.
 // senno con set O(n) tempo e O(n) spazio, ma ancora non fatti (04-11)
+
+// Non ottimale e problematica con n. con set o mappa era ottimale.
 void removeDuplicates(Node **head, int n){
     if (head == NULL || *head == NULL) return;
 
@@ -96,6 +109,8 @@ void removeDuplicates(Node **head, int n){
         }
     }
 }
+
+// funzione corretta per esercizio (senza set o mappa);
 void removeDup_cicli(Node **head){
     if (head == NULL || *head == NULL) return;
     Node *curr = *head;
@@ -125,6 +140,57 @@ void removeDuplicates_ord(Node **head){
         curr = curr->next;
     }
 }
+
+
+// funzione scambia nodi a coppie e ritorna nuova testa della lista; O(n)
+Node *pairSwap(Node *head){
+    if (head == NULL || head->next == NULL) return;
+    Node *newHead = head->next;
+    Node *prev = NULL;
+    Node *curr = head;
+    while (curr != NULL && curr->next != NULL){
+        Node *nextNode = curr->next;
+        Node *nextPair = nextNode->next;
+        nextNode->next = curr;
+        curr->next = nextPair;
+        if (prev != NULL) prev->next = nextNode;
+        prev = curr;
+        curr = nextPair;
+    }
+    return newHead;
+}
+
+
+// nuova lista con le intersezione tra due liste entrambe ordinate; O(n+m) n,m lunghezza liste
+// se liste non erano ordinate con mappa si poteva fare O(n*m) salvando i nodi e ricorrenze
+// di una lista e controllando rispetto all'altra.
+Node *intersection(Node *head1, Node *head2){
+    if (head1 == NULL || head2 == NULL) return;
+    Node *res = NULL;
+    Node *tail = NULL;
+    Node *curr1 = head1, *curr2 = head2;
+    while (curr1 != NULL && curr2 != NULL){
+        if (curr1->data == curr2->data){
+            Node *newNode = createNode(curr1->data);
+            if(newNode == NULL) return; // quando errore, va fatto il free di res.
+            if(res == NULL){
+                res = newNode;
+                tail = newNode;
+            }
+            else {
+                tail->next = newNode;
+                tail = tail->next;
+            }
+            curr1 = curr1->next;
+            curr2 = curr2->next;
+        } else if (curr1->data > curr2->data){
+            curr2 = curr2->next;
+        } else {
+            curr1 = curr1->next;
+        }
+    }
+    return res;
+}   
 
 int main(void) {
 
